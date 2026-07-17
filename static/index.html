@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Network Guard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2f;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #2a2a40;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        h1,
+        h2 {
+            color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 70%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        pre {
+            background-color: #1e1e2f;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            color: #00ffcc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Replace 'logo.png' with your actual logo file name -->
+        <img src="/static/logo.png" alt="App Logo" style="max-height: 80px; margin-bottom: 20px;">
+        <h1>Control Panel</h1>
+
+        <div class="card">
+            <h2>System Diagnostics & Network Speed</h2>
+            <button onclick="fetchDiagnostics()">Run Diagnostics</button>
+            <pre id="diag-results">Waiting for input...</pre>
+        </div>
+
+        <div class="card">
+            <h2>Target Scanner (URL/Domain/IPv6)</h2>
+            <input type="text" id="target-input" placeholder="Enter domain or URL (e.g., example.com)">
+            <button onclick="runScanner()">Scan Target</button>
+            <pre id="scan-results">Waiting for input...</pre>
+        </div>
+    </div>
+
+    <script>
+        async function fetchDiagnostics() {
+            document.getElementById('diag-results').innerText = "Running system and network checks... Please wait.";
+            const response = await fetch('/diagnostics');
+            const data = await response.json();
+            document.getElementById('diag-results').innerText = JSON.stringify(data, null, 4);
+        }
+
+        async function runScanner() {
+            const target = document.getElementById('target-input').value;
+            if (!target) return alert("Please enter a target.");
+            document.getElementById('scan-results').innerText = "Scanning target parameters... Please wait.";
+            const response = await fetch('/scan/' + encodeURIComponent(target));
+            const data = await response.json();
+            document.getElementById('scan-results').innerText = JSON.stringify(data, null, 4);
+        }
+    </script>
+</body>
+
+</html>
